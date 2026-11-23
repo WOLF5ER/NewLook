@@ -22,7 +22,7 @@ try {
     }
     if (Test-Path -LiteralPath $report) { Get-Content -LiteralPath $report -Encoding UTF8 }
     if ($process.ExitCode) { throw 'The EXE smoke test failed.' }
-    gh release create $tag $asset --repo $repository --target $commit --title "NewLook $version" --notes "Windows 10/11. Download NewLook.exe to launch NewLook. Local data is preserved on update."
+    gh release create $tag $asset --repo $repository --target $commit --title "Shelfside $version" --notes "Windows 10/11. Download NewLook.exe to launch Shelfside. Local data is preserved on update."
     if ($LASTEXITCODE) { throw 'GitHub did not publish the release.' }
 } finally {
     Pop-Location

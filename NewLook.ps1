@@ -1,4 +1,4 @@
-﻿param([switch]$SmokeTest, [switch]$EnableUpdates, [Action]$UpdateReady)
+﻿param([switch]$SmokeTest, [switch]$EnableUpdates, [Action]$UpdateReady, [byte[]]$BrandIcon)
 
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase
@@ -334,7 +334,7 @@ function New-Overlay($content) {
     $xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
- WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True"
+ Title="Shelfside" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True"
  Background="Transparent" Foreground="#172C2A" Topmost="True" xml:lang="ru-RU"
  ShowInTaskbar="False" SizeToContent="WidthAndHeight" FontFamily="Segoe UI"
  FontSize="14" UseLayoutRounding="True">
@@ -403,7 +403,7 @@ $left = New-Overlay @'
    <Border CornerRadius="24,0,0,24" Background="#EAF3EE" Padding="15,20,12,14">
     <DockPanel LastChildFill="True">
      <StackPanel DockPanel.Dock="Top" Margin="0,0,0,11">
-      <TextBlock Text="NewLook" FontSize="20" FontWeight="Bold" Margin="8,0,0,15"/>
+      <TextBlock Text="Shelfside" FontSize="20" FontWeight="Bold" Margin="8,0,0,15"/>
       <TextBlock Text="Папки" Foreground="{StaticResource Muted}" FontSize="12" FontWeight="SemiBold" Margin="8,0,0,0"/>
      </StackPanel>
      <StackPanel DockPanel.Dock="Bottom">
@@ -524,6 +524,18 @@ $right = New-Overlay @'
  </StackPanel>
 </Border>
 '@
+if ($BrandIcon) {
+    $iconStream = [IO.MemoryStream]::new($BrandIcon, $false)
+    try {
+        $iconDecoder = [Windows.Media.Imaging.IconBitmapDecoder]::new(
+            $iconStream, [Windows.Media.Imaging.BitmapCreateOptions]::None,
+            [Windows.Media.Imaging.BitmapCacheOption]::OnLoad)
+        $windowIcon = $iconDecoder.Frames | Sort-Object PixelWidth -Descending | Select-Object -First 1
+        $left.Icon = $windowIcon
+        $right.Icon = $windowIcon
+    } finally { $iconStream.Dispose() }
+}
+
 $folder = $left.FindName('Folder')
 $folderTitle = $left.FindName('FolderTitle')
 $pin = $left.FindName('Pin')
@@ -664,7 +676,7 @@ function Add-Shortcuts([string[]]$paths, [string]$targetFolder = $script:activeF
     })
     $moveExecutables = $true
     if (!$SmokeTest -and $executables.Count) {
-        $warning = "Выбрано файлов приложений: $($executables.Count). NewLook переместит сами файлы. Приложение, которому нужны соседние файлы, может перестать запускаться.`n`nПродолжить?"
+        $warning = "Выбрано файлов приложений: $($executables.Count). Shelfside переместит сами файлы. Приложение, которому нужны соседние файлы, может перестать запускаться.`n`nПродолжить?"
         $moveExecutables = [Windows.MessageBox]::Show($left, $warning,
             'Файлы приложений', 'YesNo', 'Warning', 'No') -eq 'Yes'
     }
@@ -890,7 +902,7 @@ function Show-Shortcuts {
         } else {
             if (Test-DesktopShortcut $path) {
                 $hide = New-Object Windows.Controls.MenuItem
-                $hide.Header = 'Переместить в NewLook'
+                $hide.Header = 'Переместить в Shelfside'
                 $hide.Tag = $path
                 $hide.Add_Click({
                     param($sender, $eventArgs)
@@ -898,7 +910,7 @@ function Show-Shortcuts {
                 })
                 [void]$menu.Items.Add($hide)
             }
-            $remove.Header = 'Убрать из NewLook'
+            $remove.Header = 'Убрать из Shelfside'
             $remove.Add_Click({
                 param($sender, $eventArgs)
                 $script:moveError = ''
@@ -1351,7 +1363,7 @@ if ($EnableUpdates) {
             $updateButton.Content = 'Обновить'
             $updateButton.IsEnabled = $true
             $updateTimer.Interval = [TimeSpan]::FromHours(4)
-            [void][Windows.MessageBox]::Show($left, $_.Exception.GetBaseException().Message, 'Обновление NewLook', 'OK', 'Warning')
+            [void][Windows.MessageBox]::Show($left, $_.Exception.GetBaseException().Message, 'Обновление Shelfside', 'OK', 'Warning')
         }
     })
     $updateTimer.Start()
@@ -1369,7 +1381,7 @@ $widgets.Add_Click({ Set-Panel $widgetTransition (!$widgetTransition.Open) })
 $right.FindName('CloseWidgets').Add_Click({ Set-Panel $widgetTransition $false })
 $menu = New-Object Windows.Controls.ContextMenu
 $exitItem = New-Object Windows.Controls.MenuItem
-$exitItem.Header = 'Выйти из NewLook'
+$exitItem.Header = 'Выйти из Shelfside'
 $exitItem.Add_Click({ $left.Close() })
 [void]$menu.Items.Add($exitItem)
 $handle.ContextMenu = $menu
@@ -1404,6 +1416,9 @@ if ($SmokeTest) {
     }
     try {
         [void][IO.Directory]::CreateDirectory($testRoot)
+        if ($BrandIcon -and ($left.Icon.PixelWidth -ne 256 -or $right.Icon.PixelWidth -ne 256)) {
+            throw 'Shelfside window icon did not load.'
+        }
         [void][IO.Directory]::CreateDirectory($desktopPath)
         [void][IO.Directory]::CreateDirectory($publicDesktopPath)
         $sample = Join-Path $testRoot 'Example.url'

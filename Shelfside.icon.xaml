@@ -1,0 +1,29 @@
+<DrawingGroup xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+  <GeometryDrawing Geometry="M 59,12 H 197 Q 244,12 244,59 V 197 Q 244,244 197,244 H 59 Q 12,244 12,197 V 59 Q 12,12 59,12 Z">
+    <GeometryDrawing.Brush>
+      <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#265C55" Offset="0"/>
+        <GradientStop Color="#132F33" Offset="1"/>
+      </LinearGradientBrush>
+    </GeometryDrawing.Brush>
+    <GeometryDrawing.Pen>
+      <Pen Brush="#6BA198" Thickness="2"/>
+    </GeometryDrawing.Pen>
+  </GeometryDrawing>
+  <GeometryDrawing Brush="#102C2D" Geometry="M 66,65 H 110 Q 124,65 124,79 V 183 Q 124,197 110,197 H 66 Q 52,197 52,183 V 79 Q 52,65 66,65 Z"/>
+  <GeometryDrawing Brush="#497C70" Geometry="M 62,59 H 106 Q 121,59 121,74 V 178 Q 121,193 106,193 H 62 Q 47,193 47,178 V 74 Q 47,59 62,59 Z"/>
+  <GeometryDrawing Brush="#C0E999" Geometry="M 65,100 Q 71,100 71,106 V 146 Q 71,152 65,152 Q 59,152 59,146 V 106 Q 59,100 65,100 Z"/>
+  <GeometryDrawing Brush="#102829" Geometry="M 106,60 H 187 Q 211,60 211,84 V 185 Q 211,209 187,209 H 106 Q 82,209 82,185 V 84 Q 82,60 106,60 Z"/>
+  <GeometryDrawing Geometry="M 111,49 H 184 Q 208,49 208,73 V 176 Q 208,200 184,200 H 111 Q 87,200 87,176 V 73 Q 87,49 111,49 Z">
+    <GeometryDrawing.Brush>
+      <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#ECF9DA" Offset="0"/>
+        <GradientStop Color="#9AD6BC" Offset="1"/>
+      </LinearGradientBrush>
+    </GeometryDrawing.Brush>
+  </GeometryDrawing>
+  <GeometryDrawing Brush="#316357" Geometry="M 119,109 H 176 Q 183,109 183,116 Q 183,123 176,123 H 119 Q 112,123 112,116 Q 112,109 119,109 Z"/>
+  <GeometryDrawing Brush="#316357" Geometry="M 119,151 H 176 Q 183,151 183,158 Q 183,165 176,165 H 119 Q 112,165 112,158 Q 112,151 119,151 Z"/>
+  <GeometryDrawing Brush="#5D9C7C" Geometry="M 119,82 H 133 Q 139,82 139,88 V 104 H 113 V 88 Q 113,82 119,82 Z"/>
+  <GeometryDrawing Brush="#5D9C7C" Geometry="M 155,129 H 172 Q 178,129 178,135 V 146 H 149 V 135 Q 149,129 155,129 Z"/>
+</DrawingGroup>

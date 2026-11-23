@@ -36,6 +36,12 @@ internal static class NewLookHost
                 runspace.Open();
                 powershell.Runspace = runspace;
                 powershell.AddScript(script.ReadToEnd());
+                using (var icon = executable.GetManifestResourceStream("Shelfside.ico"))
+                using (var bytes = new MemoryStream())
+                {
+                    icon.CopyTo(bytes);
+                    powershell.AddParameter("BrandIcon", bytes.ToArray());
+                }
                 if (report != null)
                     powershell.AddParameter("SmokeTest");
                 else
@@ -69,7 +75,7 @@ internal static class NewLookHost
             if (report != null)
                 File.WriteAllText(report, failure.ToString());
             else
-                MessageBox.Show(failure.GetBaseException().Message, "NewLook",
+                MessageBox.Show(failure.GetBaseException().Message, "Shelfside",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             return 1;
         }

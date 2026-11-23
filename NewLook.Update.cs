@@ -169,7 +169,7 @@ public static class NewLookUpdate
             bool acquired;
             try { acquired = mutex.WaitOne(0); }
             catch (AbandonedMutexException) { acquired = true; }
-            if (!acquired) throw new IOException("Другое окно NewLook уже устанавливает обновление.");
+            if (!acquired) throw new IOException("Другое окно Shelfside уже устанавливает обновление.");
             try
             {
                 VerifyFile(prepared.path, prepared.package);
