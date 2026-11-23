@@ -74,7 +74,18 @@ public static class NewLookUpdate
 
     private static async Task<byte[]> FetchAsync(Uri uri)
     {
-        ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+        for (int attempt = 0; attempt < 2; attempt++)
+        {
+            try { return await FetchOnceAsync(uri).ConfigureAwait(false); }
+            catch (HttpRequestException) { }
+            await Task.Delay(600).ConfigureAwait(false);
+        }
+        return await FetchOnceAsync(uri).ConfigureAwait(false);
+    }
+
+    private static async Task<byte[]> FetchOnceAsync(Uri uri)
+    {
         using (var handler = new HttpClientHandler { AllowAutoRedirect = false })
         using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(30), MaxResponseContentBufferSize = MaxBytes })
         {
