@@ -1,0 +1,6 @@
+*.exe
+*.pdb
+.newlook-*.download
+.newlook-*.old*
+*.tmp
+state.json*
